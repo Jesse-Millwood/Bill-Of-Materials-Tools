@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 '''
 This is a file that defines the object to store
@@ -112,7 +112,7 @@ class BOMpart(object):
         MostLikelyMatches = []
         confidence_threshold = 2
 
-        print '-'*40
+        print ('-'*40)
         
         for index, definition in enumerate(partgroups):
             # Reset per definiton comparison variables
@@ -120,38 +120,38 @@ class BOMpart(object):
             # Build Confidence in a match
             if definition.ref in self.ref:
                 current_confidence += 1
-                print '{0} matched in {1} at {2}'.format(definition.ref, self.ref, index)
+                print ('{0} matched in {1} at {2}'.format(definition.ref, self.ref, index))
             if definition.partType in self.library or \
                definition.partType in self.footprint:
                 current_confidence += 1
-                print '{0} matched in {1} or {2} at {3}'.format(definition.partType,
+                print ('{0} matched in {1} or {2} at {3}'.format(definition.partType,
                                                                 self.library,
                                                                 self.footprint,
-                                                                index)
+                                                                index))
             if definition.groupType in self.library or \
                definition.groupType in self.footprint:
                 current_confidence += 1
-                print '{0} matched in {1} or {2} at {3}'.format(definition.groupType,
+                print ('{0} matched in {1} or {2} at {3}'.format(definition.groupType,
                                                          self.library,
                                                          self.footprint,
-                                                         index)
+                                                         index))
             if current_confidence > highest_confidence:
                 highest_confidence = current_confidence
             if current_confidence >= confidence_threshold:
                 MostLikelyMatches.append([definition, index])
                 print 'Threshold Met'
 
-        print 'Part:'
-        print '\tRef:{0}'.format(self.ref)
-        print '\tValue:{0}'.format(self.evalue)
-        print '\tFootprint:{0}'.format(self.footprint)
-        print '\tHighest Confidence: {0}'.format(highest_confidence)
-        print 'Most Likely Groups:'
+        print ('Part:')
+        print ('\tRef:{0}'.format(self.ref))
+        print ('\tValue:{0}'.format(self.evalue))
+        print ('\tFootprint:{0}'.format(self.footprint))
+        print ('\tHighest Confidence: {0}'.format(highest_confidence))
+        print ('Most Likely Groups:')
         if len(MostLikelyMatches) == 0:
-            print 'No Match'
+            print ('No Match')
         else:
             for match in MostLikelyMatches:
-                print match[0].ref, match[0].partType, match[0].groupType
+                print (match[0].ref, match[0].partType, match[0].groupType)
         
 
 
@@ -257,7 +257,7 @@ elif __name__ == '__main__':
     kicadNetlistFile = 'Test Files/Mitten Heater.net'
     kicadparts = extractKiCADComponents(kicadNetlistFile)
 
-    print '!-----===== Testing Grouping =====-----!'
+    print('!-----===== Testing Grouping =====-----!')
     kicadparts[5].setComponentGroup()
     for kpart in kicadparts[6:]:
         kpart.setComponentGroup()

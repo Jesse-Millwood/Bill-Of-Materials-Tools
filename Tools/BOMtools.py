@@ -62,22 +62,22 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     prjname = args.input[0:args.input.index('.')]
-    print args.input
+    print (args.input)
     
     if args.edaTool.lower() == 'eagle':
-        print 'Eagle EDA-Tool Chosen'
+        print ('Eagle EDA-Tool Chosen')
         BOMparts = extractEagleComponents(args.input)
     elif args.edaTool.lower() == 'kicad':
-        print 'KiCAD EDA-Tool Chosen'
+        print ('KiCAD EDA-Tool Chosen')
         BOMparts = extractKiCADComponents(args.input)
     if args.writeCSV:
         createCSV(BOMparts, prjname)
         
     if args.verbose:
-        print 'Project Components'
-        print '-'*40
+        print ('Project Components')
+        print ('-'*40)
         for i, part in enumerate(BOMparts):
-            print '{0}: \tReference: {1}'.format(i, part.ref)
-            print '\tValue: {0}'.format(part.value)
-            print '-'*40
+            print ('{0}: \tReference: {1}'.format(i, part.ref))
+            print ('\tValue: {0}'.format(part.value))
+            print ('-'*40)
 

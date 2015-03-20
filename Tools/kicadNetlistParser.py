@@ -30,14 +30,14 @@ def extractFieldDict(string):
     string = string.strip().replace('name ', '')
     string = string.replace('field ', '')
     string = string.replace('"', '')
-#    print string
+#    print (string)
     fieldList = string.split(' ')
     if len(fieldList) > 2:
         fieldList[0] = ' '.join(fieldList[0:-1])
         fieldList[1] = fieldList[-1]
-#    print fieldList
+#    print (fieldList)
     fieldDict = {fieldList[0]:fieldList[1]}
-#    print fieldDict
+#    print (fieldDict)
     return(fieldDict)
         
 def extractKiCADComponents(filename):
