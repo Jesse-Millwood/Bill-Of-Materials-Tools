@@ -139,7 +139,7 @@ class BOMpart(object):
                 highest_confidence = current_confidence
             if current_confidence >= confidence_threshold:
                 MostLikelyMatches.append([definition, index])
-                print 'Threshold Met'
+                print ('Threshold Met')
 
         print ('Part:')
         print ('\tRef:{0}'.format(self.ref))
@@ -256,6 +256,9 @@ elif __name__ == '__main__':
     # Test Kicad Parts:
     kicadNetlistFile = 'Test Files/Mitten Heater.net'
     kicadparts = extractKiCADComponents(kicadNetlistFile)
+    topnetlist = 'Test Files/Top.net'
+    topparts = extractKiCADComponents(topnetlist)
+    BOMtools.createCSV(topparts,'Solar')
 
     print('!-----===== Testing Grouping =====-----!')
     kicadparts[5].setComponentGroup()

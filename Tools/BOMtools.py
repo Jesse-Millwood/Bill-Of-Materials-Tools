@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 '''
 BOM tools
@@ -31,17 +31,20 @@ def createCSV(parts, projectname):
     '''
     The creates the csv output file for the Bill of Materials
     '''
-    outputFilename = 'ProjectBOM.csv'
-
-    with open(outputFilename, 'wb') as csvfile:
+    outputFilename = projectname+'BOM.csv'
+    print(outputFilename)
+    with open(outputFilename, 'w', encoding='utf8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                             quoting=csv.QUOTE_ALL)
-        writer.writerow(['Project:', projectname])
+        writer.writerow(['Project:', '{0}'.format(projectname)])
         writer.writerow([' ', ' '])
         writer.writerow([' ', ' '])
         writer.writerow(['Reference', 'Value'])
         for bompart in parts:
-            writer.writerow([bompart.ref, bompart.value])
+            try:
+                writer.writerow([bompart.ref, bompart.evalue, bompart.attributes['Distributor'], bompart.attributes['Distributor #']])
+            except:
+                writer.writerow([bompart.ref, bompart.evalue])
 
 
 if __name__ == '__main__':
