@@ -1,0 +1,36 @@
+#!/usr/bin/python3.4
+
+'''
+Module ElectronicPartDB:
+Create and Edit a serialized dictionary
+that contains information about electronic
+parts used. This is intended to lessen the
+need to keep scraping websites and using api's
+to get part info
+
+command line interface and importable functions
+'''
+
+
+# Written By: Jesse Millwood
+# Tested on: Python 3.4 Ubuntu 14.04
+
+# pyline: python3
+# pylint: disable= C0103
+# pylint: disable= W0312
+# pylint: disable= W0311
+# pylint: disable= R0902
+# pylint: disable= R0913
+# pylint: disable= W0102
+# pylint: disable= C0326
+# pylint: disable= C0303
+
+import pickle
+
+    '''
+    Load Local Part Database (serialized python objects)
+    Save parts for this project
+    Update part usage (for part usage stats)
+    Keep most used (1000 most used parts?)
+    Save using pickle
+    '''

@@ -1,0 +1,73 @@
+#!/usr/bin/python
+
+'''
+Module SheetOrgainizer:
+A collection of functions to organize
+an electrical bill of materials
+'''
+
+# Written By: Jesse Millwood
+# Tested on: Python 2.7 Ubuntu 14.04
+
+
+# Installed the follwing packages via pip:
+#	* openpyxl
+# 	* ezodf
+
+
+# Disable Some Pylint Warning Messages
+
+# pylint: disable= C0103
+# pylint: disable= W0312
+# pylint: disable= W0311
+# pylint: disable= R0902
+# pylint: disable= R0913
+# pylint: disable= W0102
+# pylint: disable= C0326
+# pylint: disable= C0303
+
+import openpyxl
+import csv
+
+def reorderParts():
+    '''
+    Function: reorderParts
+    Description: Groups and orders the
+    components of the bill of materials
+    according to value
+	Order of Priority:
+	* Group (Resistor, Capacitor, IC ..)
+	* Stock Part (YES, NO)
+	* Value (If applicable)
+    '''
+
+def csvToBOM(projectpath, projectname):
+	'''
+	Take information from Eagle CSV BOM
+	and enter it into the BOM Excel File
+	
+	* How to Create The CSV File from Eagle
+		* Open Schematic
+		* Run bom.ulp
+		* Choose The Following Options:
+			* List Type: Parts
+			* List Attributes: Check
+			* Output format: CSV
+	'''
+	body = []
+	infile = projectpath + projectname + '.csv'
+	with open(infile , 'rb') as f:
+		reader = csv.reader(f)
+		for rownum,row in enumerate(reader):
+			if rownum == 0:
+				header = row
+			else:
+				body.append(row)
+	print header
+	print body
+
+if __name__ == '__main__':
+	# Example Usage
+	prjpath = '/home/jesse/Digi-Parser/SampleFiles/'
+	prjname = 'Water Use Monitor'
+	csvToBOM(prjpath, prjname)

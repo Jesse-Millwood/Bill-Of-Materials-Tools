@@ -1,0 +1,7 @@
+#!/usr/bin/python
+
+import requests
+
+DKurl = 'http://digikey.com/scripts/DkSearch/dksus.dll?Detail&name='
+dkPartno = '458-1003-ND'
+

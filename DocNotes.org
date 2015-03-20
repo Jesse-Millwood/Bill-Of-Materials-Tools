@@ -1,0 +1,41 @@
+#+TITLE:    Documentation for BOM Tools
+#+AUTHOR:   Jesse Millwood
+#+EMAIL:    jesse.c.millwood@gmail.com
+#+STARTUP: showall
+
+* Introduction
+  BOM Tools is meant to aid in creating Bill of Materials spreadsheets
+  from part information extracted from SoftCAD Eagle and organizeing it 
+  in a sane way. 
+
+  BOM Tools can take a standard Bill Of Materials in *.xlsx form and insert
+  the part information with out messing up other text and cell formulas
+  that were already there.
+
+  BOM Tools can also import part information from a spreadsheet and save it as
+  a serialized python object.
+  This can be useful for when stock part information is saved in a spreadsheet
+  and it is required to indicate wheter a part in a project is a stock part.
+
+* Command-line options
+  | Command Line option | Description                                           |
+  |---------------------+-------------------------------------------------------|
+  | --create-bom        | If this option is detected BOM tools will             |
+  |                     | get ready to create a spread sheet                    |
+  |---------------------+-------------------------------------------------------|
+  | --eaglecsv          | This is the path to the CSV file generated from Eagle |
+  |---------------------+-------------------------------------------------------|
+  |                     |                                                       |
+  |                     |                                                       |
+  |                     |                                                       |
+  |                     |                                                       |
+  |                     |                                                       |
+  |                     |                                                       |
+  |---------------------+-------------------------------------------------------|
+
+
+* Sample Usage
+** Creating a BOM spreadsheet 
+   #+BEGIN_SRC bash
+   BOMtools --create-bom --eaglecsv './WaterMonitor.csv' --output WaterMonitorBOM.xslx
+   #+END_SRC

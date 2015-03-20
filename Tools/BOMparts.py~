@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+'''
+This is a file that defines the object to store
+parts in electronic projects
+'''
+
+class BOMparts(object):
+    '''
+    This is an object to group electronic project
+    parts and their attributes
+    It provides a common way of expressing parts from
+    projects created with different EDA tools
+    
+    | BOMparts	| Eagle	    | Kicad	|
+    |-----------|-----------|-----------|
+    | ref	| name	    | name	|
+    | value	| value     | value 	|
+    | library	| library   | libsource |
+    | footprint | footprint | device    |
+    | attributes| attributes| fields	|
+    '''
+    def __init__(self):
+        self.ref=''
+        self.value=''
+        self.library=''
+        self.attributes={}

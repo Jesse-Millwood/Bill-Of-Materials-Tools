@@ -1,0 +1,78 @@
+
+============================================================
+Displaytech 164A (16*4 Standard-LCD with LED backlight) (**)
+connection to Atmel AVR STK500 10-pin Connector
+============================================================
+(to use with the modified "Fleury-LCD-lib" for avr-gcc)
+(LCD is available at www.reichelt.de)
+
+
+1.1 __ LCD (Bottom view) __
+
+..--------------------
+    0000000000000000 |
+                     |
+   16              1 |
+                     .
+                     .
+
+LCD-Controller: KS0070B (seems to be HD44780U compatible)
+
+
+1.2 __ STK 500 Connector (pin-header) __
+
+   1   2
+    O O
+    O O
+    O O
+    O O
+    O O
+   9   10
+
+
+1.3 __ Connection __
+
+LCD-PIN	STK
+ 1 VSS	9 (GND)
+ 2 VDD	10 (VTG)
+ 3 VO	9 (see 1.5)
+ 4 RS	2
+ 5 RW	3
+ 6 E	4
+ 7 B0	9
+ 8 B1	9
+ 9 B2	9
+10 B3	9
+11 B4	5
+12 B5	6
+13 B6	7
+14 B7	8
+
+
+1.4 __ Backlight LEDs __
+
+LED Backlight supply only for temporary use on STK500.
+Draws a lot of power and the voltage regulators
+on the STK500 get very hot. Use an external supply
+for the backlight if it is realy needed.
+
+15 BLA  via 3Ohm/1W to STK500 Pin 10(VTG) 
+16 BLK  9 (GND)
+
+STK Pin 1 is not used here, so the wire could be used for 
+BLA (backlight supply) on "self-made" boards.
+
+
+1.5 __ Contrast regulation __
+
+If contrast regulation is needed use a potentiometer
+(10 kOhm might be too high). But just connecting V0 
+(LCD Pin 3) to GND (LCD PIN 1) on the Displaytech 164A 
+is ok here.
+
+           VO
+            |
+            V
+  VTG---/\/\/\/\/\---GND
+
+
