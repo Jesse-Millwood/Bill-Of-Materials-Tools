@@ -27,12 +27,12 @@ from kicadNetlistParser import extractKiCADComponents
 
 
 
-def createCSV(parts, projectname):
+def createCSV(parts, projectname, outputpath):
     '''
     The creates the csv output file for the Bill of Materials
     '''
-    outputFilename = projectname+'BOM.csv'
-    print(outputFilename)
+    outputFilename = outputpath+projectname+'BOM.csv'
+    print('CSV File' + outputFilename)
     with open(outputFilename, 'w', encoding='utf8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                             quoting=csv.QUOTE_ALL)
@@ -74,13 +74,13 @@ if __name__ == '__main__':
         print ('KiCAD EDA-Tool Chosen')
         BOMparts = extractKiCADComponents(args.input)
     if args.writeCSV:
-        createCSV(BOMparts, prjname)
+        createCSV(BOMparts, prjname, args.output)
         
     if args.verbose:
         print ('Project Components')
         print ('-'*40)
         for i, part in enumerate(BOMparts):
             print ('{0}: \tReference: {1}'.format(i, part.ref))
-            print ('\tValue: {0}'.format(part.value))
+            print ('\tValue: {0}'.format(part.evalue))
             print ('-'*40)
 
