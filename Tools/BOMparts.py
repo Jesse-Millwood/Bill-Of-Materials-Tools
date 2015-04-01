@@ -248,6 +248,7 @@ def combineBOMparts(bomparts):
     # Check if part is in combined parts
     # if so append update the qty for the part in combined parts and update refs
     # if not append it to combined parts
+    # Not the most elegant but it works
     for ipart in bomparts:
         foundFlag = False
         for i,cpart in enumerate(combinedparts):
