@@ -236,7 +236,33 @@ def createGroupsList():
     AddGroup(partgroups, 'X', 'Crystal', 'Clock')
     # Set Precedence
     SetPrecedence(partgroups)
-    
+
+def combineBOMparts(bomparts):
+    '''
+    This function combines identical parts, updates the count
+    and returns a list of combined parts
+    '''
+    combinedparts = []
+    foundFlag = False
+
+    # Check if part is in combined parts
+    # if so append update the qty for the part in combined parts and update refs
+    # if not append it to combined parts
+    for ipart in bomparts:
+        foundFlag = False
+        for i,cpart in enumerate(combinedparts):
+            if cpart.evalue == ipart.evalue and \
+               cpart.attributes == ipart.attributes:
+                # Match found, update combined parts list
+                foundFlag = True
+                combinedparts[i].ref = cpart.ref+',' + ipart.ref
+                combinedparts[i].qty +=1
+        if foundFlag == False:
+            # part not already in combined parts list
+            # add it
+            combinedparts.append(ipart)
+    return combinedparts
+                
 if __name__ == 'BOMparts':
     # Module has been imported
     # Blank initialization of a global in the scope of the BOMparts

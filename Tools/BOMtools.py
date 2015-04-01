@@ -27,7 +27,7 @@ from kicadNetlistParser import extractKiCADComponents
 
 
 
-def createCSV(parts, projectname, outputpath, tool):
+def createCSV(parts, projectname, outputpath, tool, noParts):
     '''
     The creates the csv output file for the Bill of Materials
     '''
@@ -41,6 +41,7 @@ def createCSV(parts, projectname, outputpath, tool):
         # Create Header for BOM
         writer.writerow(['Project:', '{0}'.format(projectname)])
         writer.writerow(['Tool:', '{0}'.format(tool)])
+        writer.writerow(['Number of Parts ', '{0}'.format(noParts)])
         writer.writerow([' ', ' '])
         # Create Header for BOM Columns
         writer.writerow(['Reference',
@@ -98,18 +99,25 @@ if __name__ == '__main__':
     
     if args.edaTool.lower() == 'eagle':
         print ('Eagle EDA-Tool Chosen')
-        BOMparts = extractEagleComponents(args.input)
+        bomParts = extractEagleComponents(args.input)
     elif args.edaTool.lower() == 'kicad':
         print ('KiCAD EDA-Tool Chosen')
-        BOMparts = extractKiCADComponents(args.input)
+        bomParts = extractKiCADComponents(args.input)
     if args.writeCSV:
         print('Project Name: {0}'.format(prjname))
-        createCSV(BOMparts, prjname, args.output, args.edaTool)
+        combinedBOMparts = BOMparts.combineBOMparts(bomParts)
+        numberofparts = len(bomParts)
+        #createCSV(bomParts, prjname, args.output, args.edaTool)
+        createCSV(combinedBOMparts,
+                  prjname,
+                  args.output,
+                  args.edaTool,
+                  numberofparts)
         
     if args.verbose:
         print ('Project Components')
         print ('-'*40)
-        for i, part in enumerate(BOMparts):
+        for i, part in enumerate(bomParts):
             print ('{0}: \tReference: {1}'.format(i, part.ref))
             print ('\tValue: {0}'.format(part.evalue))
             print ('-'*40)
