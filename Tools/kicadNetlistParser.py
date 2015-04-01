@@ -27,7 +27,7 @@ def extractKiCADComponents(filename):
     for section in parseddata[0]:
         if 'components' in section[0]:
             netlistComponents = section
-    for i, comp in enumerate(netlistComponents):
+    for i, comp in enumerate(netlistComponents[1:]):
         # Create new part
         components.append(BOMpart())
         for attribute in comp:
@@ -39,10 +39,6 @@ def extractKiCADComponents(filename):
                 components[i].footprint = attribute[1]
             elif 'fields' in attribute[0]:
                 for field in attribute[1:]:
-                    print('-'*10)
-                    print(field)
-                    print(field[1][1])
-                    print(field[2])
                     components[i].attributes[field[1][1]] = field[2]
             elif 'libsource' in attribute[0]:
                 try:
