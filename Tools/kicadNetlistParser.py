@@ -32,18 +32,20 @@ def extractKiCADComponents(filename):
         components.append(BOMpart())
         for attribute in comp:
             if 'ref' in attribute[0]:
-                components[i].ref = attribute[1]
+                components[i].ref = attribute[1].strip('"')
             elif 'value' in attribute[0]:
-                components[i].evalue = attribute[1]
+                components[i].evalue = attribute[1].strip('"')
             elif 'footprint' in attribute[0]:
-                components[i].footprint = attribute[1]
+                components[i].footprint = attribute[1].strip('"')
             elif 'fields' in attribute[0]:
                 for field in attribute[1:]:
-                    components[i].attributes[field[1][1]] = field[2]
+                    dictkey = field[1][1].strip('"')
+                    components[i].attributes[dictkey] = field[2].strip('"')
             elif 'libsource' in attribute[0]:
                 try:
-                    components[i].library = attribute[1][1]
+                    components[i].library = attribute[1][1].strip('"')
                 except NameError:
                     print("libsource: {}".format(comp))
+        #print(i)
                 #components[i]. = attribute[2][1]
     return components

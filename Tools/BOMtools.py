@@ -27,24 +27,53 @@ from kicadNetlistParser import extractKiCADComponents
 
 
 
-def createCSV(parts, projectname, outputpath):
+def createCSV(parts, projectname, outputpath, tool):
     '''
     The creates the csv output file for the Bill of Materials
     '''
-    outputFilename = outputpath+projectname+'BOM.csv'
+    #TODO: I don't like how distributor and distributor # are hard coded
+    outputFilename = outputpath+projectname+'_BOM.csv'
+    bomRow = [0,0,0,0,0]
     print('CSV File' + outputFilename)
     with open(outputFilename, 'w', encoding='utf8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                             quoting=csv.QUOTE_ALL)
+        # Create Header for BOM
         writer.writerow(['Project:', '{0}'.format(projectname)])
+        writer.writerow(['Tool:', '{0}'.format(tool)])
         writer.writerow([' ', ' '])
-        writer.writerow([' ', ' '])
-        writer.writerow(['Reference', 'Value'])
+        # Create Header for BOM Columns
+        writer.writerow(['Reference',
+                         'Quantity',
+                         'Value',
+                         'Distributor',
+                         'Distributor #'])
+        # Fill in BOM
         for bompart in parts:
+            # Build row
             try:
-                writer.writerow([bompart.ref, bompart.evalue, bompart.attributes['Distributor'], bompart.attributes['Distributor #']])
+                bomRow[0] = bompart.ref
             except:
-                writer.writerow([bompart.ref, bompart.evalue])
+                bomRow[0] = 'NA'
+            try:
+                bomRow[1] = bompart.qty
+            except:
+                bomRow[1] = 'NA'
+            try:
+                bomRow[2] = bompart.evalue
+            except:
+                bomRow[2] = 'NA'
+            try:
+                bomRow[3] = bompart.attributes['Distributor']
+            except:
+                bomRow[3] = 'NA'
+            try:
+                bomRow[4] = bompart.attributes['Distributor #']
+            except:
+                bomRow[4] = 'NA'
+            
+            writer.writerow(bomRow)
+
 
 
 if __name__ == '__main__':
@@ -64,8 +93,8 @@ if __name__ == '__main__':
                         help='Write BOM to CSV file')
     args = parser.parse_args()
 
-    prjname = args.input[0:args.input.index('.')]
-    print (args.input)
+    prjname = args.input.split('/')[-1].split('.')[0]
+    print ('Input argument: {0}'.format(args.input))
     
     if args.edaTool.lower() == 'eagle':
         print ('Eagle EDA-Tool Chosen')
@@ -74,7 +103,8 @@ if __name__ == '__main__':
         print ('KiCAD EDA-Tool Chosen')
         BOMparts = extractKiCADComponents(args.input)
     if args.writeCSV:
-        createCSV(BOMparts, prjname, args.output)
+        print('Project Name: {0}'.format(prjname))
+        createCSV(BOMparts, prjname, args.output, args.edaTool)
         
     if args.verbose:
         print ('Project Components')

@@ -48,7 +48,7 @@ class BOMpart(object):
         self.footprint = ''
         self.attributes = {}
         self.group = ('Other', 1000)
-        self.qty = 0
+        self.qty = 1
         self.sqty = 0
         # Convert the evalue to floating point
         # if applicable
