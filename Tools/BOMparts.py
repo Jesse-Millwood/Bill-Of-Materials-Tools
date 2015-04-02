@@ -10,6 +10,7 @@ parts in electronic projects
 # pylint: disable=C0301
 # pylint: disable=R0902
 # pylint: disable=R0903
+# pylint: disable=E302
 
 import re
 
@@ -52,7 +53,7 @@ class BOMpart(object):
         self.sqty = 0
         # Convert the evalue to floating point
         # if applicable
-        # self.convertEvalue()
+        self.convertEvalue()
         # self.setComponentGroup()
 
     def convertEvalue(self):
@@ -67,26 +68,23 @@ class BOMpart(object):
             self.fvalue = -1.0
             #return -1.0
         elif self.evalue[0].isdigit():
-            multipliers = {'M':10**6,
-                           'K':10**3,
-                           'k':10**3,
-                           'm':10**-3,
-                           'u':10**-6,
-                           'n':10**-9,
-                           'p':10**-12}
+            multipliers = {'M': 10**6,
+                           'K': 10**3,
+                           'k': 10**3,
+                           'm': 10**-3,
+                           'u': 10**-6,
+                           'n': 10**-9,
+                           'p': 10**-12}
             baseval = re.findall(r'\d*\.?\d+', self.evalue)[0]
-            if len(baseval) == len(evalue): # no multiplier
+            if len(baseval) == len(evalue):  # no multiplier
                 self.fvalue = float(baseval)
-                #return float(baseval)
-            elif evalue[len(baseval)] in multipliers.keys(): # multiplier exists
+            # multiplier exists
+            elif evalue[len(baseval)] in multipliers.keys():
                 self.fvalue = float(baseval)*multipliers[self.evalue[len(baseval)]]
-                #return float(baseval)*multipliers[evalue[len(baseval)]]
             else:
                 self.fvalue = float(baseval)
-                #return float(baseval)
         else:
             self.fvalue = -1.0
-            #return -1.0
 
     def setComponentGroup(self):
         '''
@@ -108,35 +106,42 @@ class BOMpart(object):
         '''
         current_confidence = 0
         highest_confidence = 0
-        ThreshHoldMatch = []
+        #ThreshHoldMatch = []
         MostLikelyMatches = []
         confidence_threshold = 2
+        MostLikelyMatch = ('Other', 1000)
 
         print ('-'*40)
-        
+
         for index, definition in enumerate(partgroups):
             # Reset per definiton comparison variables
             current_confidence = 0
             # Build Confidence in a match
-            if definition.ref in self.ref:
+            if definition.ref.lower() in self.ref.lower():
                 current_confidence += 1
                 print ('{0} matched in {1} at {2}'.format(definition.ref, self.ref, index))
-            if definition.partType in self.library or \
-               definition.partType in self.footprint:
+            if definition.partType.lower() in self.library.lower() or \
+               definition.partType.lower() in self.footprint.lower():
                 current_confidence += 1
                 print ('{0} matched in {1} or {2} at {3}'.format(definition.partType,
                                                                 self.library,
                                                                 self.footprint,
                                                                 index))
-            if definition.groupType in self.library or \
-               definition.groupType in self.footprint:
+            if definition.groupType.lower() in self.library.lower() or \
+               definition.groupType.lower() in self.footprint.lower():
                 current_confidence += 1
                 print ('{0} matched in {1} or {2} at {3}'.format(definition.groupType,
                                                          self.library,
                                                          self.footprint,
                                                          index))
+            if definition.unit.lower() in self.evalue.lower():
+                current_confidence += 1
+                print('{0} mached in {1}'.format(definition.unit, self.evalue))
             if current_confidence > highest_confidence:
                 highest_confidence = current_confidence
+                self.group = ('{0} {1}'.format(definition.groupType,
+                                               definition.partType),
+                              definition.precedence)
             if current_confidence >= confidence_threshold:
                 MostLikelyMatches.append([definition, index])
                 print ('Threshold Met')
@@ -145,6 +150,7 @@ class BOMpart(object):
         print ('\tRef:{0}'.format(self.ref))
         print ('\tValue:{0}'.format(self.evalue))
         print ('\tFootprint:{0}'.format(self.footprint))
+        print ('\tLibrary: {0}'.format(self.library))
         print ('\tHighest Confidence: {0}'.format(highest_confidence))
         print ('Most Likely Groups:')
         if len(MostLikelyMatches) == 0:
@@ -152,6 +158,7 @@ class BOMpart(object):
         else:
             for match in MostLikelyMatches:
                 print (match[0].ref, match[0].partType, match[0].groupType)
+                
         
 
 
@@ -159,13 +166,15 @@ class groupDefinition(object):
     '''
     Object that aids in group defintions
     '''
-    def __init__(self, ref, partType, groupType, precedence):
+    def __init__(self, ref, partType, groupType, precedence, unit):
         self.ref = ref
         self.partType = partType
         self.groupType = groupType
         self.precedence = precedence
+        self.unit = unit
 
-def AddGroup(groupdeflist, reference, pt, gt):
+def AddGroup(groupdeflist, reference, pt, gt, unt='?'):
+
     '''
     Function to aid in building up a list of group 
     defintion objects 
@@ -173,7 +182,8 @@ def AddGroup(groupdeflist, reference, pt, gt):
     Precedence is set later with the SetPrecedence
     '''
     groupdeflist.append(groupDefinition(ref=reference, partType=pt,
-                                      groupType=gt, precedence=0))
+                                        groupType=gt, precedence=0,
+                                        unit=unt))
 
 def SetPrecedence(groupdeflist):
     '''
@@ -210,10 +220,10 @@ def createGroupsList():
     '''
 
     # Passive Parts
-    AddGroup(partgroups, 'C', 'Capacitor', 'Passive')
-    AddGroup(partgroups, 'R', 'Resistor', 'Passive')
-    AddGroup(partgroups, 'R', 'Potentiometer', 'Passive')
-    AddGroup(partgroups, 'L', 'Inductor', 'Passive')
+    AddGroup(partgroups, 'C', 'Capacitor', 'Passive', 'f')
+    AddGroup(partgroups, 'R', 'Resistor', 'Passive', 'ohm')
+    AddGroup(partgroups, 'R', 'Potentiometer', 'Passive', 'ohm')
+    AddGroup(partgroups, 'L', 'Inductor', 'Passive', 'h')
     AddGroup(partgroups, 'D', 'Diode', 'Passive')
     AddGroup(partgroups, 'LED', 'LED', 'Passive')
     # Transistors
@@ -225,6 +235,7 @@ def createGroupsList():
     AddGroup(partgroups, 'U', 'atmega', 'mcu')
     AddGroup(partgroups, 'U', 'pic', 'mcu')
     # ICs
+    #AddGroup(partgroups, 'U', 'Device', 'IC')
     AddGroup(partgroups, 'U', 'Reg', 'IC')
     AddGroup(partgroups, 'U', 'Transceiver', 'IC')
     AddGroup(partgroups, 'U', 'Comparator', 'IC')
@@ -251,19 +262,19 @@ def combineBOMparts(bomparts):
     # Not the most elegant but it works
     for ipart in bomparts:
         foundFlag = False
-        for i,cpart in enumerate(combinedparts):
+        for i, cpart in enumerate(combinedparts):
             if cpart.evalue == ipart.evalue and \
                cpart.attributes == ipart.attributes:
                 # Match found, update combined parts list
                 foundFlag = True
                 combinedparts[i].ref = cpart.ref+',' + ipart.ref
-                combinedparts[i].qty +=1
-        if foundFlag == False:
+                combinedparts[i].qty += 1
+        if foundFlag is False:
             # part not already in combined parts list
             # add it
             combinedparts.append(ipart)
     return combinedparts
-                
+
 if __name__ == 'BOMparts':
     # Module has been imported
     # Blank initialization of a global in the scope of the BOMparts
@@ -278,7 +289,7 @@ elif __name__ == '__main__':
     # This should be done for testing purposes
     partgroups = []
     createGroupsList()
-    
+
     # Define some test parts
     # Test Kicad Parts:
     kicadNetlistFile = 'Test Files/Mitten Heater.net'

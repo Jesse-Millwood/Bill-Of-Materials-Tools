@@ -16,6 +16,7 @@ python BOMtools.py -i '/Project Files/project.net' \
 		   -w -v
 
 '''
+# API KEY: luqgEu6Q3kf8MSpbAohv
 # pylint:disable=C0103
 # pylint:disable=C0303
 
@@ -31,10 +32,14 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
     '''
     The creates the csv output file for the Bill of Materials
     '''
-    #TODO: I don't like how distributor and distributor # are hard coded
     outputFilename = outputpath+projectname+'_BOM.csv'
     bomRow = [0,0,0,0,0]
-    print('CSV File' + outputFilename)
+    # set component groups and sort
+    for p in parts:
+        p.setComponentGroup()
+    parts.sort(key=lambda x: (x.group[1], x.fvalue), reverse=False)
+    # Create csv file
+    print('CSV Output File: ' + outputFilename)
     with open(outputFilename, 'w', encoding='utf8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                             quoting=csv.QUOTE_ALL)
@@ -45,7 +50,7 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
         writer.writerow([' ', ' '])
         # Create Header for BOM Columns
         writer.writerow(['Reference',
-                         'Quantity',
+                        'Quantity',
                          'Value',
                          'Distributor',
                          'Distributor #'])
@@ -72,7 +77,7 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
                 bomRow[4] = bompart.attributes['Distributor #']
             except:
                 bomRow[4] = 'NA'
-            
+            # Write the row that had been built
             writer.writerow(bomRow)
 
 

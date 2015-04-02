@@ -43,7 +43,7 @@ def extractKiCADComponents(filename):
                     components[i].attributes[dictkey] = field[2].strip('"')
             elif 'libsource' in attribute[0]:
                 try:
-                    components[i].library = attribute[1][1].strip('"')
+                    components[i].library ='{0} {0}'.format(attribute[1][1].strip('"'), attribute[2][1].strip('"'))
                 except NameError:
                     print("libsource: {}".format(comp))
         #print(i)
