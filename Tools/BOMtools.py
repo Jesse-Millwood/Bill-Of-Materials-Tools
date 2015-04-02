@@ -52,6 +52,7 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
         writer.writerow(['Reference',
                         'Quantity',
                          'Value',
+                         'Package',
                          'Distributor',
                          'Distributor #'])
         # Fill in BOM
@@ -70,13 +71,17 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
             except:
                 bomRow[2] = 'NA'
             try:
-                bomRow[3] = bompart.attributes['Distributor']
+                bomRow[3] = bompart.footprint
             except:
                 bomRow[3] = 'NA'
             try:
-                bomRow[4] = bompart.attributes['Distributor #']
+                bomRow[4] = bompart.attributes['Distributor']
             except:
                 bomRow[4] = 'NA'
+            try:
+                bomRow[5] = bompart.attributes['Distributor #']
+            except:
+                bomRow[5] = 'NA'
             # Write the row that had been built
             writer.writerow(bomRow)
 
