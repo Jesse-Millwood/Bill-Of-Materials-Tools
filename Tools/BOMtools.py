@@ -10,13 +10,12 @@ You can update pricing with the findchips.com api
 
 Sample Usage: 
 
-python BOMtools.py -i '/Project Files/project.net' \
-		   -o 'projectBOM.csv' \
-		   -t 'kicad' \
-		   -w -v
+python3 BOMtools.py -i '/Project Files/project.net' \
+		    -o 'projectBOM.csv' \
+		    -t 'kicad' \
+		    -w -v
 
 '''
-# API KEY: luqgEu6Q3kf8MSpbAohv
 # pylint:disable=C0103
 # pylint:disable=C0303
 
