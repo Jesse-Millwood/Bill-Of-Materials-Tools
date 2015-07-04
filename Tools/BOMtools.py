@@ -33,7 +33,7 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
     The creates the csv output file for the Bill of Materials
     '''
     outputFilename = outputpath+projectname+'_BOM.csv'
-    bomRow = [0,0,0,0,0]
+    bomRow = [0,0,0,0,0,0]
     # set component groups and sort
     for p in parts:
         p.setComponentGroup()
