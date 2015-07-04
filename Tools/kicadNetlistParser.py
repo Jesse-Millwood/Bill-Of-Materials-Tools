@@ -8,9 +8,8 @@ Script to parse kicad netlists
 
 from BOMparts import BOMpart
 from pyparsing import *
+import re
 
-
-        
 
 def extractKiCADComponents(filename):
     '''
@@ -28,7 +27,7 @@ def extractKiCADComponents(filename):
     rparen = Literal(")").suppress()
     # Define a BNF representation of what we are looking for
     fieldBNF = lparen + Word("field") + lparen  + Word("name") + \
-               Word(alphas+"\" #") + rparen + Word(alphanums+"\".-_ ") + rparen
+               Word(alphas+"\" #") + rparen + Word(alphanums+"\".-_ ~") + rparen
     componentBNF = lparen + Word("comp").suppress() + \
                    lparen + Word("ref").suppress() + Word(alphanums) + rparen + \
                    lparen + Word("value").suppress() + Word(alphanums) + rparen + \
@@ -42,15 +41,20 @@ def extractKiCADComponents(filename):
     # Iterate over list of matching grammars and create a list of component objects
     for comp in components_parsed:
         # Check for attributes and collect
-        attrs={}
+        attrs = {}
         for prprty in comp:
             if prprty[0] == 'field':
-                attrs[prprty[2]]=prprty[3]
+                attrs[prprty[2]] = prprty[3]
         # Build BOMpart and append to list
         components.append(BOMpart(ref=comp[0],
                                   evalue=comp[1],
                                   library=comp[-2]+':'+comp[-1],
                                   footprint=comp[2],
                                   attributes=attrs))
-
     return components
+
+if __name__ == '__main__':
+    # Test local functionality
+    print('Testing Kicad Netlist Parser')
+    infile = '../SampleFiles/Top.net'
+    comps = extractKiCADComponents(infile)

@@ -38,16 +38,15 @@ class BOMpart(object):
 	- group: For sorting purposes 
 	- qty: For sorting purposes, the overall qty of the exact part in the project
 	- sqty: 
-	
 
     '''
-    def __init__(self):
-        self.ref = ''
-        self.evalue = ''
+    def __init__(self, ref, evalue, library, footprint, attributes):
+        self.ref = ref
+        self.evalue = evalue
         self.fvalue = -1.0
-        self.library = ''
-        self.footprint = ''
-        self.attributes = {}
+        self.library = library
+        self.footprint = footprint
+        self.attributes = attributes
         self.group = ('Other', 1000)
         self.qty = 1
         self.sqty = 0
