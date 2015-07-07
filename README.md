@@ -17,7 +17,7 @@ Preparation and Usage (Kicad)
 You must add fields to every part in order to take advantage of having part numbers in your schematic file and exposed in the output of this tool. This can be accomplished this way:
 * In Eeschema click `Preferences` and the `Schematic Editor Options`
 * Then there is a tab at the top of that dialog window called `Template Field Names`
-* Here there can be fields entered such as "Distributor#" and "Distributor"
+* Here there can be fields shuould be "Distributor#" and "Distributor"
 * All of the schematic symbols will have these attributes now and you can edit them by pressing `E` on the symbols
 * I am not sure if there is a way to include fields when creating a symbol in the Library Editor
 
@@ -27,7 +27,7 @@ You must add attributes to every part in order to take advantage of having part 
 * In the schematic use the 'attribute' tool built in to Eagle
 * In the schematic use Bob Starr's `attrib-add` ulp in his `ulp_user` [Github repo](https://github.com/robertstarr/ulp_user)
 * In the part editor add the attributes to the parts there
-The useful attributes to add are `DISTRUBUTOR` and `DISTRIBUTOR-NUM`
+The attributes to add must be `DISTRUBUTOR` and `DISTRIBUTOR-NUM`
 
 
 
@@ -35,4 +35,4 @@ Disclaimer: This is still a work in progress. If you use this please compare the
 
 Some TODO's:
 * Detect file automatically
-* Make CSV file more 
+* Make CSV file creation more robust 
