@@ -54,9 +54,10 @@ The attributes to add must be `DISTRUBUTOR` and `DISTRIBUTOR-NUM`
 
 
 
-Disclaimer: This is still a work in progress. If you use this please compare the CSV output to the expected list.
+**Disclaimer**: This is still a work in progress. If you use this please compare the CSV output to the expected list.
 
 Some TODO's:
 * Detect file automatically
 * Make CSV file creation more robust 
 * Add pricing capability with the find chips API or something similar
+* Add multiple output formats
