@@ -25,19 +25,26 @@ def extractKiCADComponents(filename):
     # helpers with suppression
     lparen = Literal("(").suppress()
     rparen = Literal(")").suppress()
-    # Define a BNF representation of what we are looking for
-    fieldBNF = lparen + Word("field") + lparen  + Word("name") + \
-               Word(alphas+"\" #") + rparen + Word(alphanums+"\".-_ ~") + rparen
-    componentBNF = lparen + Word("comp").suppress() + \
-                   lparen + Word("ref").suppress() + Word(alphanums) + rparen + \
-                   lparen + Word("value").suppress() + Word(alphanums) + rparen + \
-                   lparen + Word("footprint").suppress() + Word(alphanums+"_:") + rparen + \
-                   lparen + Word("fields").suppress() + ZeroOrMore(Group(fieldBNF)) + rparen + \
-                   lparen + Word("libsource").suppress() + lparen + Word("lib").suppress() + Word(alphanums) + rparen + lparen + Word("part").suppress() + Word(alphanums+'-_') + rparen + rparen
-    complistBNF = OneOrMore(componentBNF)
+    # Define a grmr representation of what we are looking for
+    refgrmr = lparen + Word("ref").suppress() + Word(alphanums).setResultsName('ref') + rparen
+    valuegrmr = lparen + Word("value").suppress() + Word(alphanums).setResultsName('value') + rparen
+    fpgrmr = lparen + Word("footprint").suppress() + Word(alphanums+"_:").setResultsName('fp') + rparen
+    fieldgrmr = lparen + Word("field") + lparen  + Word("name") + \
+                Word(alphas+"\" #") + rparen + Word(alphanums+"\".-_ ~") + rparen
+    libgrmr = lparen + Word("libsource").suppress() + lparen + \
+              Word("lib").suppress() + Word(alphanums).setResultsName('lib') + rparen + \
+              lparen + Word("part").suppress() + Word(alphanums+'-_').setResultsName('libp') + \
+              rparen + rparen
+    componentgrmr = lparen + Word("comp").suppress() + \
+                    refgrmr + \
+                    valuegrmr + \
+                    fpgrmr + \
+                    lparen + Word("fields").suppress() + ZeroOrMore(Group(fieldgrmr)) + rparen + \
+                    libgrmr
+    complistgrmr = OneOrMore(componentgrmr)
     # Create list of matching grammars
     components_parsed = [data for data,dataS,dataE in 
-                         complistBNF.scanString(netfile)]
+                         complistgrmr.scanString(netfile)]
     # Iterate over list of matching grammars and create a list of component objects
     for comp in components_parsed:
         # Check for attributes and collect
@@ -46,15 +53,22 @@ def extractKiCADComponents(filename):
             if prprty[0] == 'field':
                 attrs[prprty[2]] = prprty[3]
         # Build BOMpart and append to list
-        components.append(BOMpart(ref=comp[0],
-                                  evalue=comp[1],
-                                  library=comp[-2]+':'+comp[-1],
-                                  footprint=comp[2],
+        components.append(BOMpart(ref=comp['ref'],
+                                  evalue=comp['value'],
+                                  library=comp['lib']+':'+comp['libp'],
+                                  footprint=comp['fp'],
                                   attributes=attrs))
     return components
 
 if __name__ == '__main__':
     # Test local functionality
     print('Testing Kicad Netlist Parser')
-    infile = '../SampleFiles/Top.net'
-    comps = extractKiCADComponents(infile)
+    infile = '../SampleFiles/Mainboard.net'
+    Kcomps = extractKiCADComponents(infile)
+    for c in Kcomps:
+        print('-'*40)
+        print(c.ref)
+        print(c.evalue)
+        print(c.library)
+        print(c.footprint)
+        print(c.attributes)

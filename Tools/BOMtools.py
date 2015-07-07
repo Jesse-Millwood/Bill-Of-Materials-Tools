@@ -6,8 +6,6 @@ BOM tools
 Command Line tool for converting an Eagle schematic or Kicad Netlist file
 to a BOM CSV file.
 
-You can update pricing with the findchips.com api
-
 Sample Usage: 
 
 python3 BOMtools.py -i '/Project Files/project.net' \
@@ -76,11 +74,17 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
             try:
                 bomRow[4] = bompart.attributes['Distributor']
             except:
-                bomRow[4] = 'NA'
+                try: 
+                    bomRow[4] = bompart.attributes['DISTRIBUTOR']
+                except:
+                    bomRow[4] = 'NA'
             try:
                 bomRow[5] = bompart.attributes['Distributor #']
             except:
-                bomRow[5] = 'NA'
+                try:
+                    bomRow[5] = bompart.attributes['DISTRIBUTOR-NUM']
+                except:
+                    bomRow[5] = 'NA'
             # Write the row that had been built
             writer.writerow(bomRow)
 
