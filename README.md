@@ -27,6 +27,7 @@ You must add attributes to every part in order to take advantage of having part 
 * In the schematic use the 'attribute' tool built in to Eagle
 * In the schematic use Bob Starr's `attrib-add` ulp in his `ulp_user` [Github repo](https://github.com/robertstarr/ulp_user)
 * In the part editor add the attributes to the parts there
+
 The attributes to add must be `DISTRUBUTOR` and `DISTRIBUTOR-NUM`
 
 
