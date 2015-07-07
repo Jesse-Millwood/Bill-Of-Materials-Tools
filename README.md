@@ -37,3 +37,4 @@ Disclaimer: This is still a work in progress. If you use this please compare the
 Some TODO's:
 * Detect file automatically
 * Make CSV file creation more robust 
+* Add pricing capability
