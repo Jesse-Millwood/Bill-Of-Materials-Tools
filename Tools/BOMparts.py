@@ -85,7 +85,7 @@ class BOMpart(object):
         else:
             self.fvalue = -1.0
 
-    def setComponentGroup(self):
+    def setComponentGroup(self, verbose_p):
         '''
         the grouping of the component will
         be decided
@@ -97,10 +97,10 @@ class BOMpart(object):
         Each group is characterized by a 
         	label: C, R, D, L, ect
         	ptype: part type 
-        	presedence: used for determining which group is higher up in 
+        	presedence: used for determining which group is higher up in
         		    the BOM listing
         	gtype: group type, to group passives with passives and so on
-        If any of the characteristics of a particular group are found in the 
+        If any of the characteristics of a particular group are found in the
         attributes of the BOM part that group is assigned to the BOM part
         '''
         current_confidence = 0
@@ -109,8 +109,9 @@ class BOMpart(object):
         MostLikelyMatches = []
         confidence_threshold = 2
         MostLikelyMatch = ('Other', 1000)
-
-        print ('-'*40)
+        
+        # Print if verbose is true
+        if verbose_p: print ('-'*40)
 
         for index, definition in enumerate(partgroups):
             # Reset per definiton comparison variables
@@ -118,24 +119,28 @@ class BOMpart(object):
             # Build Confidence in a match
             if definition.ref.lower() in self.ref.lower():
                 current_confidence += 1
-                print ('{0} matched in {1} at {2}'.format(definition.ref, self.ref, index))
+                if verbose_p:
+                    print ('{0} matched in {1} at {2}'.format(definition.ref, self.ref, index))
             if definition.partType.lower() in self.library.lower() or \
                definition.partType.lower() in self.footprint.lower():
                 current_confidence += 1
-                print ('{0} matched in {1} or {2} at {3}'.format(definition.partType,
-                                                                self.library,
-                                                                self.footprint,
-                                                                index))
+                if verbose_p:
+                    print ('{0} matched in {1} or {2} at {3}'.format(definition.partType,
+                                                                     self.library,
+                                                                     self.footprint,
+                                                                     index))
             if definition.groupType.lower() in self.library.lower() or \
                definition.groupType.lower() in self.footprint.lower():
                 current_confidence += 1
-                print ('{0} matched in {1} or {2} at {3}'.format(definition.groupType,
-                                                         self.library,
-                                                         self.footprint,
-                                                         index))
+                if verbose_p:
+                    print ('{0} matched in {1} or {2} at {3}'.format(definition.groupType,
+                                                                     self.library,
+                                                                     self.footprint,
+                                                                     index))
             if definition.unit.lower() in self.evalue.lower():
                 current_confidence += 1
-                print('{0} mached in {1}'.format(definition.unit, self.evalue))
+                if verbose_p:
+                    print('{0} mached in {1}'.format(definition.unit, self.evalue))
             if current_confidence > highest_confidence:
                 highest_confidence = current_confidence
                 self.group = ('{0} {1}'.format(definition.groupType,
@@ -143,22 +148,21 @@ class BOMpart(object):
                               definition.precedence)
             if current_confidence >= confidence_threshold:
                 MostLikelyMatches.append([definition, index])
-                print ('Threshold Met')
-
-        print ('Part:')
-        print ('\tRef:{0}'.format(self.ref))
-        print ('\tValue:{0}'.format(self.evalue))
-        print ('\tFootprint:{0}'.format(self.footprint))
-        print ('\tLibrary: {0}'.format(self.library))
-        print ('\tHighest Confidence: {0}'.format(highest_confidence))
-        print ('Most Likely Groups:')
-        if len(MostLikelyMatches) == 0:
-            print ('No Match')
-        else:
-            for match in MostLikelyMatches:
-                print (match[0].ref, match[0].partType, match[0].groupType)
-                
-        
+                if verbose_p:
+                    print ('Threshold Met')
+        if verbose_p:
+            print ('Part:')
+            print ('\tRef:{0}'.format(self.ref))
+            print ('\tValue:{0}'.format(self.evalue))
+            print ('\tFootprint:{0}'.format(self.footprint))
+            print ('\tLibrary: {0}'.format(self.library))
+            print ('\tHighest Confidence: {0}'.format(highest_confidence))
+            print ('Most Likely Groups:')
+            if len(MostLikelyMatches) == 0:
+                print ('No Match')
+            else:
+                for match in MostLikelyMatches:
+                    print (match[0].ref, match[0].partType, match[0].groupType)
 
 
 class groupDefinition(object):
@@ -291,13 +295,10 @@ elif __name__ == '__main__':
 
     # Define some test parts
     # Test Kicad Parts:
-    kicadNetlistFile = 'Test Files/Mitten Heater.net'
+    kicadNetlistFile = '../SampleFiles/Mainboard.net'
     kicadparts = extractKiCADComponents(kicadNetlistFile)
-    topnetlist = 'Test Files/Top.net'
-    topparts = extractKiCADComponents(topnetlist)
-    BOMtools.createCSV(topparts,'Solar')
 
     print('!-----===== Testing Grouping =====-----!')
-    kicadparts[5].setComponentGroup()
+    kicadparts[5].setComponentGroup(True)
     for kpart in kicadparts[6:]:
-        kpart.setComponentGroup()
+        kpart.setComponentGroup(True)

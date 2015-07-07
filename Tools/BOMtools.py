@@ -25,7 +25,7 @@ from kicadNetlistParser import extractKiCADComponents
 
 
 
-def createCSV(parts, projectname, outputpath, tool, noParts):
+def createCSV(parts, projectname, outputpath, tool, noParts, verbose_p):
     '''
     The creates the csv output file for the Bill of Materials
     '''
@@ -33,7 +33,7 @@ def createCSV(parts, projectname, outputpath, tool, noParts):
     bomRow = [0,0,0,0,0,0]
     # set component groups and sort
     for p in parts:
-        p.setComponentGroup()
+        p.setComponentGroup(verbose_p)
     parts.sort(key=lambda x: (x.group[1], x.fvalue), reverse=False)
     # Create csv file
     print('CSV Output File: ' + outputFilename)
@@ -125,7 +125,8 @@ if __name__ == '__main__':
                   prjname,
                   args.output,
                   args.edaTool,
-                  numberofparts)
+                  numberofparts,
+                  args.verbose)
         
     if args.verbose:
         print ('Project Components')
