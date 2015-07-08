@@ -28,7 +28,7 @@ def extractKiCADComponents(filename):
     # Define a grmr representation of what we are looking for
     refgrmr = lparen + Word("ref").suppress() + Word(alphanums).setResultsName('ref') + rparen
     valuegrmr = lparen + Word("value").suppress() + Word(alphanums).setResultsName('value') + rparen
-    fpgrmr = lparen + Word("footprint").suppress() + Word(alphanums+"_:").setResultsName('fp') + rparen
+    fpgrmr = lparen + Word("footprint").suppress() + Word(alphanums+"-_:.").setResultsName('fp') + rparen
     fieldgrmr = lparen + Word("field") + lparen  + Word("name") + \
                 Word(alphas+"\" #") + rparen + Word(alphanums+"\".-_ ~") + rparen
     libgrmr = lparen + Word("libsource").suppress() + lparen + \
@@ -63,7 +63,8 @@ def extractKiCADComponents(filename):
 if __name__ == '__main__':
     # Test local functionality
     print('Testing Kicad Netlist Parser')
-    infile = '../SampleFiles/Mainboard.net'
+    # infile = '../SampleFiles/Mainboard.net'
+    infile = '/home/jesse/millwooj@mail.gvsu.edu/RFCx/Design/PCB/Kicad Project 2/Main/Mainboard.net'
     Kcomps = extractKiCADComponents(infile)
     for c in Kcomps:
         print('-'*40)
