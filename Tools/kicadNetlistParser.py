@@ -30,7 +30,7 @@ def extractKiCADComponents(filename):
     valuegrmr = lparen + Word("value").suppress() + Word(alphanums).setResultsName('value') + rparen
     fpgrmr = lparen + Word("footprint").suppress() + Word(alphanums+"-_:.").setResultsName('fp') + rparen
     fieldgrmr = lparen + Word("field") + lparen  + Word("name") + \
-                Word(alphas+"\" #") + rparen + Word(alphanums+"\".-_ ~") + rparen
+                Word(alphas+"\" #") + rparen + Word(alphanums+"/\".-_ ~,") + rparen
     libgrmr = lparen + Word("libsource").suppress() + lparen + \
               Word("lib").suppress() + Word(alphanums).setResultsName('lib') + rparen + \
               lparen + Word("part").suppress() + Word(alphanums+'-_').setResultsName('libp') + \
