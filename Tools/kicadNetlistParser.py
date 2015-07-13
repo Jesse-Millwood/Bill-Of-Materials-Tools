@@ -27,7 +27,7 @@ def extractKiCADComponents(filename):
     rparen = Literal(")").suppress()
     # Define a grmr representation of what we are looking for
     refgrmr = lparen + Word("ref").suppress() + Word(alphanums).setResultsName('ref') + rparen
-    valuegrmr = lparen + Word("value").suppress() + Word(alphanums).setResultsName('value') + rparen
+    valuegrmr = lparen + Word("value").suppress() + Word(alphanums+".").setResultsName('value') + rparen
     fpgrmr = lparen + Word("footprint").suppress() + Word(alphanums+"-_:.").setResultsName('fp') + rparen
     fieldgrmr = lparen + Word("field") + lparen  + Word("name") + \
                 Word(alphas+"\" #") + rparen + Word(alphanums+"/\".-_ ~,") + rparen
