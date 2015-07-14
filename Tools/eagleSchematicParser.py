@@ -39,6 +39,10 @@ def extractEagleComponents(filename):
     rbracket = Literal(">").suppress()
     quote = Literal("\"").suppress()
     # Grammars for xml fields
+    # Redefine printables 
+    newprintables = re.sub(r'[<>\\]', '', printables)+' '
+    print("new: {}\n\n\n".format(newprintables))
+
     namegrmr = Word("name=").suppress() + quote + \
                Word(alphanums+"$_-").setResultsName('pref') + quote
     librarygrmr = Word("library=").suppress() + quote + \
@@ -55,6 +59,25 @@ def extractEagleComponents(filename):
                     Word(alphanums+" _-/.") + quote + \
                     Literal("/").suppress() + rbracket
     techgrmr = Word("technology=") + quote + Word(alphanums) + quote
+    # TODO: make grammar more robust
+    # namegrmr = Word("name=").suppress() + quote + \
+    #            Word(newprintables).setResultsName('pref') + quote
+    # librarygrmr = Word("library=").suppress() + quote + \
+    #               Word(newprintables).setResultsName('plib') + quote
+    # devicesetgrmr = Word("deviceset=").suppress() + quote + \
+    #                 Word(newprintables).setResultsName('pdevset') + quote
+    # devicegrmr = Word("device=").suppress() + quote + \
+    #              Optional(Word(newprintables).setResultsName('pdev')) + quote
+    # valuegrmr = Word("value=").suppress() + quote + \
+    #             Word(newprintables).setResultsName('pval') + quote
+    # attributegrmr = lbracket + Word("attribute name=").suppress() + \
+    #                 quote + Word(newprintables) + quote + \
+    #                 Word("value=").suppress() + quote + \
+    #                 Word(newprintables) + quote + \
+    #                 Literal("/").suppress() + rbracket
+    # techgrmr = Word("technology=") + quote + Word(newprintables) + quote
+
+
     # Main part grammar put together
     partgrmr = lbracket + Word("part").suppress() + \
                namegrmr +\
@@ -123,3 +146,5 @@ if __name__ == '__main__':
         print(c.library)
         print(c.footprint)
         print(c.attributes)
+
+    print('\n\nNum of Comps: {}'.format(len(Ecomps)))

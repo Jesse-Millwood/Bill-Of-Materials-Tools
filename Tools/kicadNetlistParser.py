@@ -25,16 +25,21 @@ def extractKiCADComponents(filename):
     # helpers with suppression
     lparen = Literal("(").suppress()
     rparen = Literal(")").suppress()
+    # Redefine printables 
+    newprintables = re.sub(r'[()]', '', printables)+' '
+    print("new: {}\n\n\n".format(newprintables))
+
     # Define a grmr representation of what we are looking for
-    refgrmr = lparen + Word("ref").suppress() + Word(alphanums).setResultsName('ref') + rparen
-    valuegrmr = lparen + Word("value").suppress() + Word(alphanums+". ,_").setResultsName('value') + rparen
-    fpgrmr = lparen + Word("footprint").suppress() + Word(alphanums+"-_:.").setResultsName('fp') + rparen
+    refgrmr = lparen + Word("ref").suppress() + Word(newprintables).setResultsName('ref') + rparen
+    valuegrmr = lparen + Word("value").suppress() + Word(newprintables).setResultsName('value') + rparen
+    fpgrmr = lparen + Word("footprint").suppress() + Word(newprintables).setResultsName('fp') + rparen
     fieldgrmr = lparen + Word("field") + lparen  + Word("name") + \
-                Word(alphas+"\" #") + rparen + Word(alphanums+"/\".-_ ~,#") + rparen
+                Word(newprintables) + rparen + Word(newprintables) + rparen
     libgrmr = lparen + Word("libsource").suppress() + lparen + \
-              Word("lib").suppress() + Word(alphanums).setResultsName('lib') + rparen + \
-              lparen + Word("part").suppress() + Word(alphanums+'-_').setResultsName('libp') + \
+              Word("lib").suppress() + Word(newprintables).setResultsName('lib') + rparen + \
+              lparen + Word("part").suppress() + Word(newprintables).setResultsName('libp') + \
               rparen + rparen
+
     componentgrmr = lparen + Word("comp").suppress() + \
                     refgrmr + \
                     valuegrmr + \
@@ -73,3 +78,4 @@ if __name__ == '__main__':
         print(c.library)
         print(c.footprint)
         print(c.attributes)
+    print('\n\nNum of Comps: {}'.format(len(Kcomps)))
